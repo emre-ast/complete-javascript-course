@@ -15,6 +15,8 @@ console.log(document.querySelector('.guess').value);
 
 //Lecture 2
 const luckyNumber = Math.trunc(Math.random() * 20) + 1;
+const getScore = () => Number(document.querySelector('.score').textContent);
+const setScoreZero = () => (document.querySelector('.score').textContent = 0);
 
 const updateScore = () =>
   (document.querySelector('.score').textContent =
@@ -23,17 +25,30 @@ const updateScore = () =>
 function guessTheNumber() {
   const guess = Number(document.querySelector('.guess').value);
 
-  if (guess == luckyNumber) {
+  if (!guess) {
+    document.querySelector('.message').textContent = 'Enter a Number';
+  } else if (guess < luckyNumber) {
+    if (getScore() <= 1) {
+      document.querySelector('.message').textContent = 'You Lost!';
+      setScoreZero();
+    } else {
+      document.querySelector('.message').textContent = 'Too Low!';
+      updateScore();
+    }
+  } else if (guess > luckyNumber) {
+    if (getScore() <= 1) {
+      document.querySelector('.message').textContent = 'You Lost!';
+      setScoreZero();
+    } else {
+      document.querySelector('.message').textContent = 'Too High!';
+      updateScore();
+    }
+  } else {
     document.querySelector('.message').textContent = 'Correct!';
     document.querySelector('.number').textContent = luckyNumber;
-  } else if (guess < luckyNumber) {
-    document.querySelector('.message').textContent = 'Too Low!';
-    updateScore();
-  } else if (guess > luckyNumber) {
-    document.querySelector('.message').textContent = 'Too High!';
-    updateScore();
-  } else {
-    document.querySelector('.message').textContent = 'Enter a Number';
+
+    document.querySelector('body').style.backgroundColor = '#60b347';
+    document.querySelector('.number').style.width = '30rem';
   }
 }
 
