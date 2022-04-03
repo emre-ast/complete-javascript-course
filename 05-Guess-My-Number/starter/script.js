@@ -14,7 +14,7 @@ console.log(document.querySelector('.guess').value);
 */
 
 //Lecture 2
-const luckyNumber = Math.trunc(Math.random() * 20) + 1;
+let luckyNumber = Math.trunc(Math.random() * 20) + 1;
 const getScore = () => Number(document.querySelector('.score').textContent);
 const setScoreZero = () => (document.querySelector('.score').textContent = 0);
 
@@ -52,4 +52,19 @@ function guessTheNumber() {
   }
 }
 
+const resetGame = function () {
+  document.querySelector('.message').textContent = 'Start Guessing...';
+  document.querySelector('.score').textContent = 20;
+  document.querySelector('.number').textContent = '?';
+  document.querySelector('.guess').value = '';
+
+  //Draw new lucky number
+  luckyNumber = Math.trunc(Math.random() * 20) + 1;
+
+  //Resetting style of page back to start state
+  document.querySelector('body').style.backgroundColor = '#222';
+  document.querySelector('.number').style.width = '15rem';
+};
+
 document.querySelector('.check').addEventListener('click', guessTheNumber);
+document.querySelector('.again').addEventListener('click', resetGame);
