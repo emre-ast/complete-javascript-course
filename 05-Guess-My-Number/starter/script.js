@@ -13,48 +13,51 @@ document.querySelector('.guess').value = 11;
 console.log(document.querySelector('.guess').value);
 */
 
-//Lecture 2
+// Lecture 2
 let luckyNumber = Math.trunc(Math.random() * 20) + 1;
-const getScore = () => Number(document.querySelector('.score').textContent);
-const setScoreZero = () => (document.querySelector('.score').textContent = 0);
 
+const getScore = () => Number(document.querySelector('.score').textContent);
+const setScore = newScore =>
+  (document.querySelector('.score').textContent = newScore);
 const updateScore = () =>
   (document.querySelector('.score').textContent =
     Number(document.querySelector('.score').textContent) - 1);
+
+const getHighScore = () => document.querySelector('.highscore').textContent;
+const updateHighscore = () =>
+  Number(getScore()) > Number(getHighScore()) ? getScore() : getHighScore();
+
+const setDisplayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
 
 function guessTheNumber() {
   const guess = Number(document.querySelector('.guess').value);
 
   if (!guess) {
     document.querySelector('.message').textContent = 'Enter a Number';
-  } else if (guess < luckyNumber) {
+  } else if (guess !== luckyNumber) {
     if (getScore() <= 1) {
-      document.querySelector('.message').textContent = 'You Lost!';
-      setScoreZero();
+      setDisplayMessage('You Lost!');
+      setScore(0);
     } else {
-      document.querySelector('.message').textContent = 'Too Low!';
-      updateScore();
-    }
-  } else if (guess > luckyNumber) {
-    if (getScore() <= 1) {
-      document.querySelector('.message').textContent = 'You Lost!';
-      setScoreZero();
-    } else {
-      document.querySelector('.message').textContent = 'Too High!';
+      setDisplayMessage(guess < luckyNumber ? 'Too Low!' : 'Too High!');
       updateScore();
     }
   } else {
-    document.querySelector('.message').textContent = 'Correct!';
+    setDisplayMessage('Correct!');
     document.querySelector('.number').textContent = luckyNumber;
 
     document.querySelector('body').style.backgroundColor = '#60b347';
     document.querySelector('.number').style.width = '30rem';
+
+    document.querySelector('.highscore').textContent = updateHighscore();
   }
 }
 
 const resetGame = function () {
-  document.querySelector('.message').textContent = 'Start Guessing...';
-  document.querySelector('.score').textContent = 20;
+  setDisplayMessage('Start Guessing...');
+  setScore(20);
   document.querySelector('.number').textContent = '?';
   document.querySelector('.guess').value = '';
 
