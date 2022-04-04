@@ -37,3 +37,8 @@ btnsOpenModal.forEach(element => {
 //Deactiveting Modal when cross or overlay are clicked
 btnCloseModal.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
+
+//Deactiveting Modal when escape key is pressed
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+});
