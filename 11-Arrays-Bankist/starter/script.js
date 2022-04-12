@@ -61,6 +61,70 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const displayMovements = function (movenents) {
+  //This method clears previous html data
+  containerMovements.innerHTML = '';
+
+  movenents.forEach(function (mov, i) {
+    const movType = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${movType}">
+        ${i + 1} ${movType}
+      </div>
+      <div class="movements__value">${mov}</div>
+    </div>`;
+
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+displayMovements(account1.movements);
+
+const user = 'Steven Thomas Williams';
+
+const createUsername = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+createUsername(accounts);
+
+const calcPrintBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.textContent = `${balance} EUR`;
+};
+calcPrintBalance(account1.movements);
+
+const calcDisplaySummary = function (movements) {
+  const sumIn = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, posMov) => acc + posMov, 0);
+
+  labelSumIn.textContent = `${sumIn}€`;
+
+  const sumOut = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, posMov) => acc + posMov, 0);
+
+  labelSumOut.textContent = `${sumOut}€`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter(int => int >= 1)
+    .reduce((acc, int) => acc + int);
+
+  labelSumInterest.textContent = `${interest}€`;
+};
+calcDisplaySummary(account1.movements);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -71,6 +135,173 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
+// currencies.forEach(function (value, key) {
+//   console.log(`${key}: ${value}`);
+// });
+
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+// movements.forEach(function (mov, i) {
+//   if (mov > 0) {
+//     console.log(`Movement ${i + 1}: You deposited ${mov}`);
+//   } else {
+//     console.log(`Movement ${i + 1}: You withdrew ${Math.abs(mov)}`);
+//   }
+// });
+
 /////////////////////////////////////////////////
+
+// const arr = [1, 2, 3, 4, 5];
+
+// //It is similar to slice method but this one mutates the array itself
+// arr.splice(1, 2);
+// console.log(arr);
+
+// //It reverse the order of the array by mutating it
+// arr.reverse();
+// console.log(arr);
+
+// const arr2 = [6, 7, 8, 9, 0];
+
+// const mergedArr = arr.concat(arr2);
+// console.log(mergedArr);
+// console.log([...arr, ...arr2]);
+
+///////////////////////////////////////
+// Coding Challenge #1
+
+/* 
+Julia and Kate are doing a study on dogs. So each of them asked 5 dog owners about their dog's age, and stored the data into an array (one array for each). For now, they are just interested in knowing whether a dog is an adult or a puppy. A dog is an adult if it is at least 3 years old, and it's a puppy if it's less than 3 years old.
+
+Create a function 'checkDogs', which accepts 2 arrays of dog's ages ('dogsJulia' and 'dogsKate'), and does the following things:
+
+1. Julia found out that the owners of the FIRST and the LAST TWO dogs actually have cats, not dogs! So create a shallow copy of Julia's array, and remove the cat ages from that copied array (because it's a bad practice to mutate function parameters)
+2. Create an array with both Julia's (corrected) and Kate's data
+3. For each remaining dog, log to the console whether it's an adult ("Dog number 1 is an adult, and is 5 years old") or a puppy ("Dog number 2 is still a puppy 🐶")
+4. Run the function for both test datasets
+
+HINT: Use tools from all lectures in this section so far 😉
+
+TEST DATA 1: Julia's data [3, 5, 2, 12, 7], Kate's data [4, 1, 15, 8, 3]
+TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+// const checkDogs = function (dogsJulia, dogsKate) {
+//   const correctedDogsJulia = dogsJulia.slice(1, -2);
+//   const allDogs = [...correctedDogsJulia, ...dogsKate];
+
+//   allDogs.forEach(function (dogsAge, i) {
+//     if (dogsAge >= 3) {
+//       console.log(
+//         `Dog number ${i + 1} is an adult, and is ${dogsAge} years old`
+//       );
+//     } else {
+//       console.log(`Dog number ${i + 1} is still a puppy 🐶`);
+//     }
+//   });
+// };
+
+// const dogsJulia = [3, 5, 2, 12, 7];
+// const dogsKate = [4, 1, 15, 8, 3];
+// checkDogs(dogsJulia, dogsKate);
+
+///////////////////////////////////////
+
+// const euroToUsd = 1.1;
+
+// movements.forEach(element => console.log(element));
+
+// const movementsUSD = movements.map(function (value) {
+//   return value * euroToUsd;
+// });
+
+// const movementsUSD = movements.map(value => value * euroToUsd);
+// console.log(movementsUSD);
+
+// movementsUSD.forEach(element => console.log(element));
+
+// const movementDescriptions = movements.map(
+//   (mov, i) =>
+//     `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+//       mov
+//     )}`
+// );
+
+// console.log(movementDescriptions);
+
+///////////////////////////////////////
+
+// const deposits = movements.filter(mov => mov > 0);
+// const withdrawals = movements.filter(mov => mov < 0);
+// console.log(movements);
+// console.log(deposits);
+// console.log(withdrawals);
+
+///////////////////////////////////////
+
+// //First parameter is call back fn, second one is initial value of accumulator
+// const balance = movements.reduce(function (acc, mov, i) {
+//   return acc + mov;
+// }, 0);
+
+// console.log(movements);
+// console.log(balance);
+
+// const max = movements.reduce(
+//   (acc, mov) => (acc = mov > acc ? mov : acc),
+//   movements[0]
+// );
+// console.log(max);
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Let's go back to Julia and Kate's study about dogs. This time, they want to convert dog ages to human ages and calculate the average age of the dogs in their study.
+
+Create a function 'calcAverageHumanAge', which accepts an arrays of dog's ages ('ages'), and does the following things in order:
+
+1. Calculate the dog age in human years using the following formula: if the dog is <= 2 years old, humanAge = 2 * dogAge. If the dog is > 2 years old, humanAge = 16 + dogAge * 4.
+2. Exclude all dogs that are less than 18 human years old (which is the same as keeping dogs that are at least 18 years old)
+3. Calculate the average human age of all adult dogs (you should already know from other challenges how we calculate averages 😉)
+4. Run the function for both test datasets
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+// const calcAverageHumanAge = function (ages) {
+//   console.log(ages);
+
+//   const humanwiseDogAges = ages.map(age => (age <= 2 ? age * 2 : age * 4 + 16));
+//   console.log(humanwiseDogAges);
+
+//   const filteredHumanwiseAges = humanwiseDogAges.filter(age => age >= 18);
+//   console.log(filteredHumanwiseAges);
+
+//   const avgAge =
+//     filteredHumanwiseAges.reduce((acc, age) => acc + age, 0) /
+//     filteredHumanwiseAges.length;
+
+//   console.log(avgAge);
+// };
+
+// calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
+// calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+
+///////////////////////////////////////
+
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(firstWithdrawal);
+
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+
+const arr = ['1', '2', '3', '4', '5'];
+
+console.log(arr);
+console.log(arr.map(Number));
