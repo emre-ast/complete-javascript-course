@@ -73,14 +73,12 @@ const displayMovements = function (movenents) {
       <div class="movements__type movements__type--${movType}">
         ${i + 1} ${movType}
       </div>
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov}€</div>
     </div>`;
 
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-
-displayMovements(account1.movements);
 
 const user = 'Steven Thomas Williams';
 
@@ -95,35 +93,53 @@ const createUsername = function (accs) {
 };
 createUsername(accounts);
 
-const calcPrintBalance = function (movements) {
+const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, mov) => acc + mov, 0);
 
   labelBalance.textContent = `${balance} EUR`;
 };
-calcPrintBalance(account1.movements);
 
-const calcDisplaySummary = function (movements) {
-  const sumIn = movements
+const calcDisplaySummary = function (account) {
+  const sumIn = account.movements
     .filter(mov => mov > 0)
     .reduce((acc, posMov) => acc + posMov, 0);
 
   labelSumIn.textContent = `${sumIn}€`;
 
-  const sumOut = movements
+  const sumOut = account.movements
     .filter(mov => mov < 0)
     .reduce((acc, posMov) => acc + posMov, 0);
 
   labelSumOut.textContent = `${sumOut}€`;
 
-  const interest = movements
+  const interest = account.movements
     .filter(mov => mov > 0)
-    .map(deposit => (deposit * 1.2) / 100)
+    .map(deposit => (deposit * account.interestRate) / 100)
     .filter(int => int >= 1)
     .reduce((acc, int) => acc + int);
 
   labelSumInterest.textContent = `${interest}€`;
 };
-calcDisplaySummary(account1.movements);
+
+let personLoggedIn;
+
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  personLoggedIn = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+
+  if (personLoggedIn?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome back ${
+      personLoggedIn.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 1;
+    displayMovements(personLoggedIn.movements);
+    calcDisplaySummary(personLoggedIn);
+    calcDisplayBalance(personLoggedIn.movements);
+  }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -295,13 +311,13 @@ GOOD LUCK 😀
 
 ///////////////////////////////////////
 
-const firstWithdrawal = movements.find(mov => mov < 0);
-console.log(firstWithdrawal);
+// const firstWithdrawal = movements.find(mov => mov < 0);
+// console.log(firstWithdrawal);
 
-const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-console.log(account);
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
 
-const arr = ['1', '2', '3', '4', '5'];
+// const arr = ['1', '2', '3', '4', '5'];
 
-console.log(arr);
-console.log(arr.map(Number));
+// console.log(arr);
+// console.log(arr.map(Number));
